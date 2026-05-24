@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>バイト給料・手取り計算ツール | 学生向け</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; background: #f0f4ff; min-height: 100vh; padding: 20px; color: #1a1a2e; }
+  .container { max-width: 600px; margin: 0 auto; }
+  header { text-align: center; padding: 30px 0 24px; }
+  header h1 { font-size: 22px; font-weight: 800; color: #2d2d6b; line-height: 1.4; }
+  header p { font-size: 13px; color: #666; margin-top: 6px; }
+  .card { background: #fff; border-radius: 20px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+  .card h2 { font-size: 14px; font-weight: 700; color: #5a5aaa; margin-bottom: 18px; }
+  .input-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .input-row label { font-size: 14px; font-weight: 600; color: #333; white-space: nowrap; min-width: 130px; }
+  .input-wrap { display: flex; align-items: center; gap: 8px; flex: 1; }
+  input[type="number"] { flex: 1; padding: 10px 14px; border: 2px solid #e0e0f0; border-radius: 12px; font-size: 16px; font-weight: 600; color: #2d2d6b; background: #f8f8ff; outline: none; width: 100%; }
+  input[type="number"]:focus { border-color: #6c63ff; background: #fff; }
+  .unit { font-size: 13px; color: #888; white-space: nowrap; }
+  .calc-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #6c63ff, #5a4fcf); color: #fff; font-size: 17px; font-weight: 700; border: none; border-radius: 16px; cursor: pointer; box-shadow: 0 4px 16px rgba(108,99,255,0.35); }
+  .results { display: none; }
+  .result-main { text-align: center; padding: 8px 0 20px; }
+  .result-main .label { font-size: 13px; color: #888; margin-bottom: 4px; }
+  .result-main .amount { font-size: 42px; font-weight: 800; color: #2d2d6b; line-height: 1; }
+  .result-main .amount span { font-size: 18px; font-weight: 600; }
+  .result-main .sub { font-size: 13px; color: #888; margin-top: 6px; }
+  .divider { height: 1px; background: #f0f0fa; margin: 16px 0; }
+  .result-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
+  .result-row:last-child { border-bottom: none; }
+  .result-row .r-label { font-size: 14px; color: #555; }
+  .result-row .r-value { font-size: 16px; font-weight: 700; color: #2d2d6b; }
+  .walls { margin-top: 4px; }
+  .wall-item { border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #e0e0f0; }
+  .wall-item.safe { border-left-color: #4ade80; background: #f0fdf4; }
+  .wall-item.warning { border-left-color: #facc15; background: #fefce8; }
+  .wall-item.danger { border-left-color: #f87171; background: #fef2f2; }
+  .wall-label { font-size: 13px; font-weight: 600; color: #444; }
+  .wall-label .wall-desc { font-size: 11px; font-weight: 400; color: #888; display: block; margin-top: 2px; }
+  .wall-status { text-align: right; }
+  .wall-status .remain { font-size: 15px; font-weight: 700; }
+  .wall-status .remain.safe { color: #16a34a; }
+  .wall-status .remain.warning { color: #d97706; }
+  .wall-status .remain.over { color: #dc2626; }
+  .wall-status .remain-label { font-size: 11px; color: #888; display: block; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+  .badge.safe { background: #dcfce7; color: #16a34a; }
+  .badge.warning { background: #fef9c3; color: #b45309; }
+  .badge.over { background: #fee2e2; color: #dc2626; }
+  .tip-box { background: #eef0ff; border-radius: 14px; padding: 14px 16px; font-size: 13px; color: #5a5aaa; line-height: 1.6; }
+  .tip-box strong { display: block; margin-bottom: 4px; color: #3d3d99; }
+  footer { text-align: center; padding: 20px 0; font-size: 12px; color: #aaa; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>バイト給料・手取り計算ツール</h1>
+    <p>学生向け｜103万の壁も一発チェック</p>
+  </header>
+  <div class="card">
+    <h2>バイト情報を入力</h2>
+    <div class="input-row">
+      <label>時給</label>
+      <div class="input-wrap">
+        <input type="number" id="hourly" value="1100" min="700" max="5000" step="50">
+        <span class="unit">円</span>
+      </div>
+    </div>
+    <div class="input-row">
+      <label>1日の勤務時間</label>
+      <div class="input-wrap">
+        <input type="number" id="hours" value="4" min="1" max="12" step="0.5">
+        <span class="unit">時間</span>
+      </div>
+    </div>
+    <div class="input-row">
+      <label>月の勤務日数</label>
+      <div class="input-wrap">
+        <input type="number" id="days" value="15" min="1" max="31">
+        <span class="unit">日</span>
+      </div>
+    </div>
+    <div class="input-row" style="margin-bottom:0;">
+      <label>今月までの累計月数</label>
+      <div class="input-wrap">
+        <input type="number" id="months" value="1" min="1" max="12">
+        <span class="unit">ヶ月目</span>
+      </div>
+    </div>
+  </div>
+  <button class="calc-btn" onclick="calculate()">計算する</button>
+  <div class="results" id="results">
+    <div class="card" style="margin-top:16px;">
+      <h2>今月の収入</h2>
+      <div class="result-main">
+        <div class="label">今月の手取り（概算）</div>
+        <div class="amount" id="takehome">0<span>円</span></div>
+        <div class="sub" id="takehome-sub"></div>
+      </div>
+      <div class="divider"></div>
+      <div class="result-row"><span class="r-label">月収（税込）</span><span class="r-value" id="monthly">0円</span></div>
+      <div class="result-row"><span class="r-label">所得税（概算）</span><span class="r-value" id="income-tax">0円</span></div>
+      <div class="result-row"><span class="r-label">年収換算</span><span class="r-value" id="annual">0円</span></div>
+      <div class="result-row"><span class="r-label">累計収入</span><span class="r-value" id="cumulative">0円</span></div>
+    </div>
+    <div class="card">
+      <h2>扶養・税金の壁チェック</h2>
+      <div class="walls" id="walls"></div>
+    </div>
+    <div class="card">
+      <h2>アドバイス</h2>
+      <div class="tip-box" id="advice"></div>
+    </div>
+  </div>
+  <footer>※この計算は概算です。正確な金額は税務署や会社にご確認ください。</footer>
+</div>
+<script>
+function fmt(n){return Math.round(n).toLocaleString('ja-JP');}
+function calculate(){
+  var hourly=parseFloat(document.getElementById('hourly').value)||0;
+  var hours=parseFloat(document.getElementById('hours').value)||0;
+  var days=parseFloat(document.getElementById('days').value)||0;
+  var months=parseInt(document.getElementById('months').value)||1;
+  var monthly=hourly*hours*days;
+  var annual=monthly*12;
+  var cumulative=monthly*months;
+  var taxable=Math.max(0,annual-1030000);
+  var tax=taxable>0?taxable*0.05*1.021:0;
+  var taxM=tax/12;
+  var takehome=monthly-taxM;
+  document.getElementById('takehome').innerHTML=fmt(takehome)+'<span>円</span>';
+  document.getElementById('takehome-sub').textContent=annual>1030000?'※年収103万超のため所得税あり':'※年収103万以内のため所得税なし';
+  document.getElementById('monthly').textContent=fmt(monthly)+'円';
+  document.getElementById('income-tax').textContent=taxM<1?'0円（扶養内）':'▲'+fmt(taxM)+'円/月';
+  document.getElementById('annual').textContent=fmt(annual)+'円';
+  document.getElementById('cumulative').textContent=fmt(cumulative)+'円';
+  var walls=[{limit:1030000,label:'103万円の壁',desc:'超えると所得税が発生・親の扶養から外れる可能性'},{limit:1060000,label:'106万円の壁',desc:'週20h以上・大企業なら社会保険加入義務'},{limit:1300000,label:'130万円の壁',desc:'超えると確実に親の扶養から外れ社会保険料が発生'}];
+  var html='';
+  walls.forEach(function(w){
+    var r=w.limit-annual;
+    var sc=r>0?(r>200000?'safe':'warning'):'danger';
+    var bc=r>0?(r>200000?'safe':'warning'):'over';
+    var bt=r>0?(r>200000?'余裕あり':'注意'):'超過';
+    var rt=r>0?'あと '+fmt(r)+'円':fmt(Math.abs(r))+'円 オーバー';
+    html+='<div class="wall-item '+sc+'"><div class="wall-label">'+w.label+' <span class="badge '+bc+'">'+bt+'</span><span class="wall-desc">'+w.desc+'</span></div><div class="wall-status"><span class="remain '+(r>0?(r>200000?'safe':'warning'):'over')+'">'+rt+'</span><span class="remain-label">年収 '+fmt(annual)+'円</span></div></div>';
+  });
+  document.getElementById('walls').innerHTML=html;
+  var adv='';
+  if(annual<1030000){var r2=1030000-annual;var rm=monthly>0?Math.floor(r2/monthly):'—';adv='<strong>現在は扶養内で安心です</strong>103万の壁まであと'+fmt(r2)+'円（約'+rm+'ヶ月分）の余裕があります。';}
+  else if(annual<1060000){adv='<strong>103万を超えています</strong>所得税がかかり始めますが金額はまだ小さいです。';}
+  else if(annual<1300000){adv='<strong>106万の壁に近いか超えています</strong>大企業でのバイトなら社会保険加入義務が生じる可能性があります。';}
+  else{adv='<strong>130万の壁を超えています</strong>親の扶養から外れ、自分で社会保険に加入する必要があります。';}
+  document.getElementById('advice').innerHTML=adv;
+  document.getElementById('results').style.display='block';
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.addEventListener('keydown',function(e){if(e.key==='Enter')calculate();});
+</script>
+</body>
+</html>
