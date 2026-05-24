@@ -3,7 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>バイト給料・手取り計算ツール | 学生向け</title>
+<title>バイト給料・手取り計算ツール【学生向け】103万の壁も無料チェック</title>
+<meta name="description" content="学生バイトの給料・手取りを簡単計算。時給・勤務時間・日数を入力するだけで月収・手取り・103万/106万/130万の壁まで残りいくらかを一発確認。無料で使えるバイト計算ツール。">
+<meta name="keywords" content="バイト,給料計算,手取り計算,103万の壁,106万の壁,130万の壁,学生,扶養,アルバイト,時給計算,月収計算">
+<meta name="author" content="baito-calculator">
+<link rel="canonical" href="https://burubon-hub.github.io/baito-calculator/">
+<meta property="og:title" content="バイト給料・手取り計算ツール【学生向け】">
+<meta property="og:description" content="時給・勤務時間・日数を入れるだけで手取りと103万の壁チェックができる無料ツール。学生バイトに特化。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://burubon-hub.github.io/baito-calculator/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="バイト給料・手取り計算ツール【学生向け】">
+<meta name="twitter:description" content="時給・勤務時間・日数を入れるだけで手取りと103万の壁チェックができる無料ツール。">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "バイト給料・手取り計算ツール",
+  "description": "学生バイトの給料・手取りを簡単計算。103万・106万・130万の壁チェックも一発でできる無料ツール。",
+  "url": "https://burubon-hub.github.io/baito-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "inLanguage": "ja"
+}
+</script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; background: #f0f4ff; min-height: 100vh; padding: 20px; color: #1a1a2e; }
@@ -50,6 +74,11 @@
   .badge.over { background: #fee2e2; color: #dc2626; }
   .tip-box { background: #eef0ff; border-radius: 14px; padding: 14px 16px; font-size: 13px; color: #5a5aaa; line-height: 1.6; }
   .tip-box strong { display: block; margin-bottom: 4px; color: #3d3d99; }
+  .faq { margin-top: 8px; }
+  .faq h2 { font-size: 16px; font-weight: 700; color: #2d2d6b; margin-bottom: 12px; }
+  .faq-item { margin-bottom: 14px; }
+  .faq-item dt { font-size: 14px; font-weight: 700; color: #3d3d99; margin-bottom: 4px; }
+  .faq-item dd { font-size: 13px; color: #555; line-height: 1.6; }
   footer { text-align: center; padding: 20px 0; font-size: 12px; color: #aaa; }
 </style>
 </head>
@@ -57,33 +86,33 @@
 <div class="container">
   <header>
     <h1>バイト給料・手取り計算ツール</h1>
-    <p>学生向け｜103万の壁も一発チェック</p>
+    <p>学生向け｜103万の壁も一発チェック｜無料</p>
   </header>
   <div class="card">
     <h2>バイト情報を入力</h2>
     <div class="input-row">
-      <label>時給</label>
+      <label for="hourly">時給</label>
       <div class="input-wrap">
         <input type="number" id="hourly" value="1100" min="700" max="5000" step="50">
         <span class="unit">円</span>
       </div>
     </div>
     <div class="input-row">
-      <label>1日の勤務時間</label>
+      <label for="hours">1日の勤務時間</label>
       <div class="input-wrap">
         <input type="number" id="hours" value="4" min="1" max="12" step="0.5">
         <span class="unit">時間</span>
       </div>
     </div>
     <div class="input-row">
-      <label>月の勤務日数</label>
+      <label for="days">月の勤務日数</label>
       <div class="input-wrap">
         <input type="number" id="days" value="15" min="1" max="31">
         <span class="unit">日</span>
       </div>
     </div>
     <div class="input-row" style="margin-bottom:0;">
-      <label>今月までの累計月数</label>
+      <label for="months">今月までの累計月数</label>
       <div class="input-wrap">
         <input type="number" id="months" value="1" min="1" max="12">
         <span class="unit">ヶ月目</span>
@@ -113,6 +142,23 @@
       <h2>アドバイス</h2>
       <div class="tip-box" id="advice"></div>
     </div>
+  </div>
+  <div class="card faq">
+    <h2>よくある質問</h2>
+    <dl>
+      <div class="faq-item">
+        <dt>Q. 103万円の壁とは？</dt>
+        <dd>年収が103万円を超えると所得税が発生し、親の扶養から外れる可能性があります。学生バイトが最も注意すべきラインです。</dd>
+      </div>
+      <div class="faq-item">
+        <dt>Q. 手取りはどう計算される？</dt>
+        <dd>月収から所得税を差し引いた金額が手取りです。年収103万円以下の学生は所得税がかからないため、月収＝手取りになります。</dd>
+      </div>
+      <div class="faq-item">
+        <dt>Q. 106万・130万の壁は何が違う？</dt>
+        <dd>106万円を超えると大企業での社会保険加入義務が生じます。130万円を超えると親の扶養から外れ、自分で国民健康保険・国民年金に加入が必要になります。</dd>
+      </div>
+    </dl>
   </div>
   <footer>※この計算は概算です。正確な金額は税務署や会社にご確認ください。</footer>
 </div>
@@ -149,7 +195,7 @@ function calculate(){
   document.getElementById('walls').innerHTML=html;
   var adv='';
   if(annual<1030000){var r2=1030000-annual;var rm=monthly>0?Math.floor(r2/monthly):'—';adv='<strong>現在は扶養内で安心です</strong>103万の壁まであと'+fmt(r2)+'円（約'+rm+'ヶ月分）の余裕があります。';}
-  else if(annual<1060000){adv='<strong>103万を超えています</strong>所得税がかかり始めますが金額はまだ小さいです。';}
+  else if(annual<1060000){adv='<strong>103万を超えています</strong>所得税がかかり始めますが金額はまだ小さいです。106万の壁まではまだ余裕があります。';}
   else if(annual<1300000){adv='<strong>106万の壁に近いか超えています</strong>大企業でのバイトなら社会保険加入義務が生じる可能性があります。';}
   else{adv='<strong>130万の壁を超えています</strong>親の扶養から外れ、自分で社会保険に加入する必要があります。';}
   document.getElementById('advice').innerHTML=adv;
